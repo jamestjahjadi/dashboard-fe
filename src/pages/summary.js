@@ -9,14 +9,15 @@ const SummaryDashboard = (props) =>{
     const currentTime = new Date().toISOString().slice(0, 10);
 
 
-    const [count, setcount]=useState()
+    const [showCount, setcount]=useState([])
     const [dateData, setDatadate]=useState()
     const [date, setdate]=useState({})
 
     useEffect(()=>{
-        Axios.get(`${API}/summary/2020-05-28`)
+        Axios.get(`${API}/summary/${currentTime}`)
         .then((res)=>{
             setcount(res.data)
+           
         }).catch((err)=>{
             console.log(err)
         })
@@ -30,19 +31,24 @@ const SummaryDashboard = (props) =>{
             console.log(err)
         })
     }
-console.log(count)
+    
+    console.log(showCount);
+    
 
 return(
     <div style={{display:'flex', flexWrap:'wrap',  padding:20, width:'100%', marginTop:'20%px', marginLeft:'10%'}}>
         <div style={{height:'200px', width:'200px', borderRadius:'50%',backgroundColor:'lightblue'}}>
          <div style={{marginLeft:'40%', marginTop:'30%', fontSize:'50px'}}>
-            
+           {
+               showCount
+           }
          </div>
         </div>
         <div style={{marginTop:'5%', marginLeft:'5%'}}>
              <InputGroup>
-        <InputGroupAddon placeholder='YYYY-MM-DD'>Put a Date</InputGroupAddon>
+        <InputGroupAddon >Put a Date</InputGroupAddon>
         <Input
+        placeholder='YYYY-MM-DD'
         onChange={(e)=>{setdate(e.target.value)}} />
       </InputGroup>
       <br></br>
