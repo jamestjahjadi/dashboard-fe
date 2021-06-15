@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {API} from './../supports'
+import {API} from '../supports/server'
 import {Bar} from 'react-chartjs-2';
 import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { Button, ButtonGroup } from 'reactstrap'
@@ -13,12 +13,15 @@ const MonthlyDashboard = () =>{
       11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31],
       datasets:[]
     })
-
+    const[name, setname]=useState([])
     const [data, setData]=useState({date: 0 ,year:0, name: ''})
+   
+ 
     var date = new Date()
     var month = date.getMonth()
 
     useEffect(()=>{
+      allname()
       Axios.get(`${API}/monthly/${month}`)
       .then((res)=>{
         var DB = res.data      
@@ -28,6 +31,26 @@ const MonthlyDashboard = () =>{
       })
   },[])
 
+  
+
+  const getall = () =>{
+    Axios.get(`${API}/alldata/`, {params:{...data}})
+    .then((res)=>{
+      var DB = res.data
+      test(DB)
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
+
+  const allname = () => {
+    Axios.get(`${API}/allname/`)
+    .then((res)=>{
+      setname(res.data)
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
 
   const test=(data)=>{
     var i
@@ -78,18 +101,33 @@ const MonthlyDashboard = () =>{
       })
     }
 
+
+ const dropdownName = () => {
+   return name.map((val,index)=>{
+     return (
+      <option 
+      value={`${val.DisplayName}`
+      
+    }>{val.DisplayName}</option>
+     )
+   })
+ }
+ 
+
+
+console.log(name);
 return(
     <div style={{width:'100%',marginLeft:'5px'}}>
        <div style={{widht:'70%', marginLeft:'60%', marginRight:'10%'}} >
+
+
     <InputGroup>
       
-        <Input
-        placeholder='insert name'
-        name='name'
-        type='text'
-        value={data.name}
-        onChange={(e)=>{setData({...data, name:e.target.value})}}
-        />
+    <select onChange={(e)=>{setData({...data, name:e.target.value})}}>
+    <option value=''>Pick Name</option>
+      {dropdownName()}
+    </select>
+      
         <Input
         placeholder='insert month'
         name='month'
@@ -109,6 +147,9 @@ return(
         <ButtonGroup>
             <Button color="primary" onClick={()=>{button()}}>
                 Insert data
+            </Button>
+            <Button onClick={()=>{getall()}}>
+              Insert Month and Year
             </Button>
         </ButtonGroup>
     </div>

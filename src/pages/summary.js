@@ -1,9 +1,8 @@
 import Axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import {API} from './../supports'
+import {API} from '../supports/server'
 import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import { Button, ButtonGroup } from 'reactstrap'
-import axios from 'axios';
 const SummaryDashboard = (props) =>{
 
     const currentTime = new Date().toISOString().slice(0, 10);
